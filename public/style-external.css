@@ -1,0 +1,14 @@
+div, input{
+  box-sizing: border-box;
+  border-radius: 4px;
+  transition: .3s all ease;
+  font-family: 'arial';
+}
+
+body{
+  color: #FFF;
+  background-color: #858c99;
+  font-family: 'Varela Round', sans-serif;
+}
+
+/*background-color: #98a0ad;*/

@@ -1,0 +1,76 @@
+.eventBox{
+  min-height: 80px;
+  margin: 10px;
+  padding: 25px;
+  border:1px solid #D4F2FF;
+  transition: .3s all ease;
+  cursor: pointer;
+}
+
+.eventBox:hover, .selected{
+  border:1px solid #EFEFFF;
+  background-color: #98a0ad;
+}
+
+.eventCount{
+  float:right;
+  border:0px solid grey;
+  font-weight: normal;
+}
+
+.eventCountTitle{
+  display:block;
+  font-size: .65em;
+  font-weight: normal;
+}
+
+.eventCountNumber{
+  display:block;
+  font-size: 1.25em;
+  font-weight: normal;
+}
+
+
+
+.eventDate{
+  display: block;
+  font-size: .75em;
+  font-weight: normal;
+}
+
+.eventId{
+  display: block;
+  font-size: .75em;
+  font-weight: normal;
+}
+
+.eventSection{
+
+}
+
+.eventPane{
+  display:inline-block;
+  max-height: 70vh;
+  min-width: 320px;
+  overflow-y: auto;
+  border:1px solid #EFEFFF;
+  vertical-align: top;
+}
+
+.eventVenue{
+  display: inline-block;
+  font-size: .85em;
+  font-weight: bold;
+  width: 23vw;
+  max-height: 30px;
+  border:0px solid grey;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 25px;
+}
+
+.eventWindow, .ticketWindow{
+  display: inline-block;
+  border: 0px solid red;
+}

@@ -1,0 +1,167 @@
+
+.ticketPane{
+  display:inline-block;
+  max-height: 70vh;
+  width: 640px;
+  overflow-y: auto;
+  border:1px solid #EFEFFF;
+  vertical-align: top;
+}
+
+.ticketBox{
+  min-height: 90px;
+  margin: 10px;
+  padding: 25px;
+  border:1px solid #D4F2FF;
+  transition: .3s all ease;
+}
+
+.ticketBox:hover{
+  background-color: #98a0ad;
+}
+
+.ticketBox-enter {
+  opacity: 0.01;
+}
+
+.ticketBox-enter.ticketBox-enter-active {
+  opacity: 0.01;
+  transition: opacity 500ms ease-in;
+}
+
+.ticketBox-leave {
+  opacity: 1;
+}
+
+.ticketBox-leave.ticketBox-leave-active {
+  opacity: 0;
+  transition: opacity 10ms ease-in;
+}
+
+.ticketBox-appear {
+  opacity: 0;
+}
+
+.ticketBox-appear.ticketBox-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.tPropsRow{
+ min-height: 20px;
+ border:0px solid red;
+}
+
+.tProps{
+  display:inline-block;
+  font-size: .9em;
+  font-weight: normal;
+  height: 20px;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tEventTitleBar{
+  width:100%;
+  border-bottom:1px solid #FFF;
+  border-radius: 0px;
+  margin-bottom:5px;
+  height: 24px;
+}
+
+.tEventTitle, .tEventDate{
+  padding-top:4px;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.tEventTitle{
+  width: 60%;
+  color: #c5d3ea;
+}
+
+
+.tStubHubId{
+  font-weight: normal;
+  color: orange;
+}
+
+.tSeatList{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 50%;
+}
+
+.tSeatNode, .tLocSection, .tLocRow, .ticketId{
+  display:inline-block;
+  background-color: #BCD;
+  min-width: 20px;
+  text-align: center;
+  color: #FFF;
+  height:20px;
+  margin-right:2px;
+  padding: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.tLocSection{
+  background-color: #DBC;
+}
+
+.tLocRow{
+  background-color: #CBD;
+}
+
+.ticketId{
+  font-weight: bold;
+  color: #000;
+}
+
+.tQuickEdit, .tCheckBox{
+  display:inline-block;
+  width: 21px;
+  height: 20px;
+  color: #999;
+  padding-left:4px;
+  padding-top: 2px;
+  border:1px solid #CCC;
+  cursor: pointer;
+  margin-right:2px;
+}
+
+.tCheckBox{
+  color: #FFF;
+  border:1px solid #CCC;
+  background-color: #FFF;
+}
+
+.tQuickEdit:hover, .tCheckBox:hover, .tCheckBoxChecked{
+  color: #0A0;
+  background-color: #b6f9b6;
+  border:1px solid #b6f9b6;
+}
+.tCheckBoxChecked:hover{
+  color: #FFF;
+  background-color: #c64c33;
+  border:1px solid #c64c33;
+}
+
+.tPricing{
+  display:inline-block;
+  font-weight: normal;
+  margin-right: 8px;
+  font-size: 1.15em;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.tPropsSmall{
+  margin-top:5px;
+  margin-bottom:5px;
+  font-size: .75em;
+}
