@@ -18,7 +18,8 @@ class EventList extends Component {
                 onClick={() => this.props.onClick(event.stubHubId, event.tickets)}
                 key={ event.stubHubId }
                 selected={ this.props.selected }
-                ticketsInSelection={ event.ticketsInSelection.length }>
+                //ticketsInSelection={ event.ticketsInSelection.length }
+                rules={ event.rules }>
          </Event>
        )
      })

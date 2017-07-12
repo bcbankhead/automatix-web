@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 //import marked from 'marked';
 import Moment from 'moment';
-import Func from './helperFunctions';
+import hFunc from './functions_helper';
 import FontAwesome from 'react-fontawesome';
 
 class Event extends Component {
@@ -76,7 +76,7 @@ class Event extends Component {
             <div className={ broadcasting }><FontAwesome name='wifi'/></div>
             <div className='tProps'><FontAwesome name='ticket'/>x { this.props.quantity }</div>
             <div className='tProps tLocSection'>sec: { this.props.section || 'n/a'}</div>
-            {Func.renderIf(this.props.section !== this.props.row)(<div className='tProps tLocRow'>row: { this.props.row || 'n/a'}</div>)(null)}
+            {hFunc.renderIf(this.props.section !== this.props.row)(<div className='tProps tLocRow'>row: { this.props.row || 'n/a'}</div>)(null)}
             <div className='tProps tSeatList'>{ this.renderSeats(this.props.seats) }</div>
           </div>
           <div className='tPropsRow'>

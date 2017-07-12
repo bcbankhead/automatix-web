@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import Moment from 'moment';
 import FontAwesome from 'react-fontawesome';
 
-import Func from './helperFunctions';
+import hFunc from '../funcLib/functions_helper';
 
 let customStyles = {
         overlay : {
@@ -110,7 +110,7 @@ class ModalComponents extends Component {
           <div className='ruleTextNode ruleText'>{ t.event.name }</div>
           <div className='ruleTextNode ruleDate'>{ Moment(t.eventDate).format('MM/DD/YYYY') }</div>
           <div className='tProps tLocSection ruleSection'>sec: { t.section || 'n/a'}</div>
-          {Func.renderIf(t.section !== t.row)(<div className='tProps tLocRow'>row: { t.row || 'n/a'}</div>)(null)}
+          {hFunc.renderIf(t.section !== t.row)(<div className='tProps tLocRow'>row: { t.row || 'n/a'}</div>)(null)}
           <div className='tProps tSeatNode'>qty: {t.quantity}</div>
           </div>
         )

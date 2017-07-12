@@ -31,9 +31,12 @@ class TicketList extends Component {
                 ticketObj={ t }
                 skyBoxId={ t.skyboxId }
                 key={ t.skyboxId }
+                rule={ t.rule }
                 globalEdit={() => this.props.globalEdit(null,null)}
-                quickEdit={() => this.props.quickEdit(t.stubhubEventId, t)}
+                quickEdit={() => this.props.quickEdit(t.event.stubhubEventId, t)}
                 handleTicketCheck={() => this.props.handleTicketCheck(t.event.stubhubEventId, t)}
+                handleRuleState={() => this.props.handleRuleState(t.event.stubhubEventId, t)}
+                handleRuleRefresh={this.props.handleRuleRefresh}
                 >
          </TicketGroup>
        )

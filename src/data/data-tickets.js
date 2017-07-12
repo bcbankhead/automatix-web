@@ -148,14 +148,48 @@ const dataLocal = [
     "performer":{"name":"Tim McGraw","eventType":"CONCERT"},
     "vividSeatsEventUrl":"http://www.vividseats.com/shop/viewTickets.shtml?productionId=2170898"}}},
 {"ticketGroup":
-  {"skyboxId":9595441,"quantity":2,"section":"128","row":"20","lowSeat":14,"highSeat":15,"seats":"14,15","cost":453.0,"faceValue":0.0,
-    "listPrice":220.0,"lastPriceUpdate":"2017-05-23T17:56:00.000+0000","seatType":"CONSECUTIVE","broadcast":true,
-    "event":{"eventId":2173624,"stubhubEventId":9693609,"name":"Roger Waters","date":"06/03/2017",
-    "venue":{"name":"Pepsi Center","city":"Denver","state":"CO","timezone":"America/Denver"},
-    "performer":{"name":"Roger Waters","eventType":"CONCERT"},
-    "vividSeatsEventUrl":"http://www.vividseats.com/shop/viewTickets.shtml?productionId=2173624"}}},
+  {
+    "skyboxId":9595441,
+    "quantity":2,
+    "section":"128",
+    "row":"20",
+    "lowSeat":14,
+    "highSeat":15,
+    "seats":"14,15",
+    "cost":453.0,
+    "faceValue":0.0,
+    "listPrice":220.0,
+    "lastPriceUpdate":"2017-05-23T17:56:00.000+0000",
+    "seatType":"CONSECUTIVE",
+    "broadcast":true,
+    "event":{
+        "eventId":2173624,
+        "stubhubEventId":9693609,
+        "name":"Roger Waters",
+        "date":"06/03/2017",
+      "venue":{
+        "name":"Pepsi Center",
+        "city":"Denver",
+        "state":"CO",
+        "timezone":"America/Denver"
+      },
+    "performer":{
+        "name":"Roger Waters",
+        "eventType":"CONCERT"
+      },
+    "vividSeatsEventUrl":"http://www.vividseats.com/shop/viewTickets.shtml?productionId=2173624"}
+  }
+},
 {"ticketGroup":
-  {"skyboxId":9595442,"quantity":4,"section":"128","row":"14","lowSeat":13,"highSeat":16,"seats":"13,14,15,16","cost":906.0,"faceValue":0.0,
+  {"skyboxId":9595442,
+  "quantity":4,
+  "section":"128",
+  "row":"14",
+  "lowSeat":13,
+  "highSeat":16,
+  "seats":"13,14,15,16",
+  "cost":906.0,
+  "faceValue":0.0,
     "listPrice":235.0,"lastPriceUpdate":"2017-05-23T17:56:00.000+0000","seatType":"CONSECUTIVE","broadcast":true,
     "event":{"eventId":2173624,"stubhubEventId":9693609,"name":"Roger Waters","date":"06/03/2017",
     "venue":{"name":"Pepsi Center","city":"Denver","state":"CO","timezone":"America/Denver"},

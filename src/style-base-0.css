@@ -78,8 +78,20 @@ background-color: #a1abba
 .floatLeft{
   float:left;
 }
+
 .inactive{
+  color: #9b7373;
+  background-color: #e5acac;
+}
+
+.notCreated{
+  color: #9da4b2;
   background-color: #ced9ed;
+}
+
+.active{
+  color: #52b23e;
+  background-color: #ace5ae;
 }
 
 .disabled{
@@ -97,7 +109,6 @@ background-color: #a1abba
   display:inline-block;
   min-width: 20px;
   text-align: center;
-  color: #FFF;
   height:20px;
   margin-right:2px;
   padding: 2px;

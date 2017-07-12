@@ -5,6 +5,16 @@ import Moment from 'moment';
 import Func from './helperFunctions';
 
 class Event extends Component {
+  renderRules(rules){
+    if(rules.length >0){
+      let ruleNodes = rules.map(r => {
+        return(
+          <div className='tSeatNode' key={ r.id }>{ r.id }</div>
+        )
+      })
+      return ruleNodes
+    }
+  }
 
   render() {
     Moment.locale('en');

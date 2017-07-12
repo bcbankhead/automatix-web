@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 import EventList from './EventList';
-import TicketList from './TicketList';
-import ModalComponents from './Modals';
+import TicketList from '../tickets/TicketList';
+import ModalComponents from '../modals/Modals';
 
 //import CommentForm from './CommentForm';
 //import { Router, Route } from 'react-router';
@@ -12,7 +12,8 @@ import ModalComponents from './Modals';
 import Moment from 'moment';
 import 'moment-timezone';
 
-import dataLocal from './data'; //comment to use data from source
+import dataLocal from '../data/data-tickets'; //comment to use data from source
+import dataRules from '../data/data-rules'; //comment to use data from source
 
 class EventWindow extends Component {
   constructor(props) {
@@ -35,12 +36,13 @@ class EventWindow extends Component {
     let eventArray = {}, allTickets = [], allEvents = []
     inputData.forEach(e => {
       let r = e.ticketGroup,
-          thisRow = {}
+          thisRow = {};
       for(var key in r){
-          thisRow[key] = r[key]
+          thisRow[key] = r[key];
           if(key === 'event'){
-            thisRow.eventDate = Moment.tz(r.event.date, 'MM/DD/YYYY', r.event.venue.timezone).format()
+            thisRow.eventDate = Moment.tz(r.event.date, 'MM/DD/YYYY', r.event.venue.timezone).format();
           }
+          thisRow.selected = false;
       }
       if(!eventArray[r.event.stubhubEventId]){
         eventArray[r.event.stubhubEventId] = {}
@@ -55,6 +57,7 @@ class EventWindow extends Component {
         eventArray[r.event.stubhubEventId].meta.timeZone  = r.event.venue.timezone
         eventArray[r.event.stubhubEventId].rules = []
         eventArray[r.event.stubhubEventId].ticketsInSelection = []
+        eventArray[r.event.stubhubEventId].activeRules = []
         eventArray[r.event.stubhubEventId].ticketIDs = []
         eventArray[r.event.stubhubEventId].tickets = [thisRow]
         allTickets.push(thisRow)
@@ -84,35 +87,77 @@ class EventWindow extends Component {
         ticketGroups: [],
         allEvents: allEvents,
         filteredEvents: allEvents,
-        selectedEvent: ''
+        selectedEvent: '',
+        selectedTicket: ''
       }, () => {
-        console.log(this.state)
+        // axios.get('http://automatix.herokuapp.com/api/v1/getRules')
+        // .then(dataRules => {
+        this.parseRules(dataRules)
+        //}
       }
     )
   }
 
+  parseRules(rules, skyboxId){
+    let allEvents = this.state.allEvents.slice();
+    allEvents.forEach(event=>{
+      event.rules =[] //initialize array, future: update only required rule.
+      rules.forEach(rule =>{
+        if(rule.stubhub_event_id === event.stubHubId){
+          event.tickets.forEach(ticket => {
+            ticket.rule = ticket.rule || {}
+            if(ticket.skyboxId === rule.vivid_id){
+              ticket.rule = rule
+              event.rules.push(
+                {
+                  ruleId: rule.id,
+                  currPrice: rule.price_updates[rule.price_updates.length -1].current_price,
+                  startPrice: rule.starting_price,
+                  lastUpdate: rule.price_updates[rule.price_updates.length -1].updated_at,
+                  reprice_interval: rule.price_updates[rule.price_updates.length -1].reprice_interval,
+                  state: rule.price_updates[rule.price_updates.length -1].state,
+                }
+              )
+            }
+          })
+        }
+      })
+    })
+    this.setState({
+        allEvents: allEvents,
+        filteredEvents: allEvents,
+        selectedTicket: skyboxId || ''
+    }, () => {
+      //console.log(this.state)
+    })
+  }
+
   loadDataFromServer() {
     //Data Manipulation Library
-    // axios.get(this.props.url)
-    // .then(res => {
-    //   this.parseData(res.data.data)
+    // axios.get('http://automatix.herokuapp.com/api/v1/inventory')
+    // .then(dataInventory => {
+    //   this.parseData(dataInventory.data.data)
     // })
-      //Local Data:
+    //Local Data:
       this.parseData(dataLocal)
+
   }
 
   changeEvent(stubHubId, tickets){
     this.setState({ ticketGroups: tickets,
                     selectedEvent: stubHubId
                   }, () => {
-                    console.log(this.state)
+                    //console.log(this.state)
                   })
   }
 
-  quickEdit(stubHubId, ticket){
+  quickEdit(stubHubId, ticketGroup){
+    let lastClickedTicket = this.state.selectedTicket
+        lastClickedTicket = ticketGroup.skyboxId === lastClickedTicket ? '' : lastClickedTicket = ticketGroup.skyboxId
+    /*
     let ticketArray = this.state.selectedTickets.slice(), ruleArray = []
-    if(ticket && ticketArray.indexOf(ticket) < 0){
-      ticketArray.push(ticket)
+    if(ticketGroup && ticketArray.indexOf(ticketGroup) < 0){
+      ticketArray.push(ticketGroup)
     }
     ticketArray.forEach(t => {
       let ruleObject = {}
@@ -127,21 +172,16 @@ class EventWindow extends Component {
       ruleObject.starting_quantity = t.quantity
       ruleArray.push(ruleObject)
     })
-    console.log(ruleArray)
-
-     /*[ {
-        ruleObject.vivid_id: 9901072,
-        ruleObject.stubhub_event_id: 9705206,
-        ruleObject.event_date: "2017-04-05T19:00:00",
-        ruleObject.section_name: "Reserve C Sides",
-        ruleObject.row: "M",
-        ruleObject.seats: "10, 12",
-        ruleObject.split: "2",
-        ruleObject.starting_price: 126.3,
-        ruleObject.starting_quantity: 2
-      } ]
-
+      console.log(ruleArray)
       */
+    //temporary
+      this.setState({
+                      selectedTicket: lastClickedTicket
+                    }, () => {
+                      console.log(this.state)
+                    })
+
+    /*
     axios.post('https://automatix.herokuapp.com/api/v1/ticket_groups/', { ticket_groups: ruleArray })
     .then(res => {
       console.log(res)
@@ -153,8 +193,47 @@ class EventWindow extends Component {
                   }, () => {
                     console.log(this.state)
                   })
+                  */
   }
+  handleRuleState(stubHubId, ticketGroup){
+    if(ticketGroup.rule.price_updates){
+      ticketGroup.rule.price_updates[ticketGroup.rule.price_updates.length - 1].state = ticketGroup.rule.price_updates[ticketGroup.rule.price_updates.length - 1].state === 'active' ? 'inactive' : 'active'
+      //update database
+      /*
+      axios.post('https://automatix.herokuapp.com/api/v1/ticket_groups/', set new active state)
+      .then(res => {
+      axios.get('http://automatix.herokuapp.com/api/v1/getRules')
+      .then(dataRules => {
 
+      this.parseRules(dataRules, ticketGroup.skyboxId )
+      */
+        //update state (doing manually here, parseRules will update state)
+        this.setState({
+                        selectedTicket: ticketGroup.skyboxId
+                      }, () => {
+                        //console.log(this.state)
+                      })
+      /*
+        }
+      })
+      */
+    } else {
+      //create new ticket group rule
+      //update database
+      /*
+      axios.post('https://automatix.herokuapp.com/api/v1/ticket_groups/', set new active state)
+      .then(res => {
+        console.log(res)
+        //update state
+        this.setState({
+                        selectedTicket: ticketGroup
+                      }, () => {
+                        console.log(this.state)
+                      })
+      })
+      */
+    }
+  }
   updateArrays(array, thisTicketId, remove){
     array.forEach(e =>{
       if(e.ticketIDs.indexOf(thisTicketId) >= 0){
@@ -170,8 +249,13 @@ class EventWindow extends Component {
     })
   }
 
+
+  handleRuleRefresh(ticketGroup){
+    console.log('refresh a rule')
+    console.log(ticketGroup)
+  }
+
   handleTicketCheck(stubHubId, ticket){
-    console.log(stubHubId,ticket)
     var remove = false
     let selectedTicketArray = this.state.selectedTickets.slice(),
         eventArray = this.state.allEvents.slice(),
@@ -193,7 +277,7 @@ class EventWindow extends Component {
                     allEvents: eventArray,
                     filteredEvents: filteredArray
                   }, () => {
-                    console.log(this.state)
+                    //console.log(this.state)
                   })
   }
 
@@ -209,7 +293,7 @@ class EventWindow extends Component {
     this.setState({
                     selectedTickets: []
                   }, () => {
-                    console.log(this.state)
+                    //console.log(this.state)
                   })
   }
 
@@ -218,7 +302,7 @@ class EventWindow extends Component {
     this.setState({
                     filteredEvents :  reversedArray
                   }, () => {
-                    console.log(this.state)
+                    //console.log(this.state)
                   })
   }
 
@@ -292,10 +376,12 @@ class EventWindow extends Component {
           </div>
           <div className='ticketWindow'>
             <TicketList
-              data={ this.state.ticketGroups } selected={ this.state.selectedTickets }
+              data={ this.state.ticketGroups } selected={ this.state.selectedTicket }
               globalEdit={ () => this.quickEdit(null, null) }
               quickEdit={ (stubHubId, ticket) => this.quickEdit(stubHubId, ticket) }
               handleTicketCheck={ (stubHubId, ticket) => this.handleTicketCheck(stubHubId, ticket) }
+              handleRuleState={ (stubHubId, ticket) => this.handleRuleState(stubHubId, ticket) }
+              handleRuleRefresh={ this.handleRuleRefresh }
               handleDeselectAllTickets={ () => this.handleDeselectAllTickets() }
             />
           </div>
