@@ -27,6 +27,10 @@
   text-align: center;
 }
 
+.invalid{
+ color: #F00;
+}
+
 .TicketGroup_Rule_Active{
   width: 40px;
   padding-top:5px;

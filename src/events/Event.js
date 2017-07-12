@@ -5,20 +5,51 @@ import Moment from 'moment';
 import hFunc from '../funcLib/functions_helper';
 
 class Event extends Component {
-  renderRules(rules){
-    if(rules && rules.length >0){
-      let ruleNodes = rules.map((r,i) => {
-        let active = 'basicNode inactive'
-        if(r.state === 'active'){
-          active = 'basicNode active darkGreen'
+  renderRules(tickets){
+    let activeRules = {}, inActiveRules = {}, totalActive = 0, totalInActive = 0
+    if(tickets){
+      tickets.forEach(t =>{
+        if(t.rule && t.rule.id){
+          t.rule.price_updates.forEach(p =>{
+            if(p.state === 'active'){
+              activeRules[t.rule.id] = 1
+            }
+            if(p.state === 'inactive'){
+              inActiveRules[t.rule.id] = 1
+            }
+          })
         }
+        for(var key in activeRules){
+          if(inActiveRules[key]){
+            delete inActiveRules[key]
+          }
+        }
+        totalActive = Object.keys(activeRules).length;
+        totalInActive = Object.keys(inActiveRules).length;
+      })
+
+      if(totalActive > 0 && totalInActive > 0){
         return(
-          <div className='ruleContainer' key={ r.ruleId }>
-            <div className={ active } >{ i + 1 }</div>
+          <div>
+          <div className='basicNode active darkGreen'>Active: { totalActive }</div>
+          <div className='basicNode inactive'>Inactive: { totalInActive }</div>
           </div>
         )
-      })
-      return ruleNodes
+      }
+      if(totalActive > 0 && totalInActive === 0){
+        return(
+          <div>
+          <div className='basicNode active darkGreen'>{ totalActive }</div>
+          </div>
+        )
+      }
+      if(totalActive === 0 && totalInActive > 0){
+        return(
+          <div>
+          <div className='basicNode inactive '>{ totalInActive }</div>
+          </div>
+        )
+      }
     }
   }
 
@@ -35,7 +66,7 @@ class Event extends Component {
           </div>
         </div>
         {hFunc.renderIf(this.props.venue !== "No Events Found")(<div className='eventDate'>{ Moment(this.props.date).format('ddd MMM D, YYYY') }</div>)(null)}
-        { this.renderRules(this.props.rules) }
+        { this.renderRules(this.props.tickets) }
       </div>
     )
     //<div className='eventId'>{ this.props.stubHubId }</div>

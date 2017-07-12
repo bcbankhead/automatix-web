@@ -8,8 +8,6 @@ import AnimateHeight from 'react-animate-height';
 
 import './style_TicketGroup.css';
 
-let updateObject = {}
-
 class TicketGroup extends Component {
   constructor(props) {
     super(props);
@@ -17,13 +15,19 @@ class TicketGroup extends Component {
     this.state = {
         ceiling_price: Number(this.props.ticketObj.rule.pricing_rule.ceiling_price).toFixed(2),
         floor_price: Number(this.props.ticketObj.rule.pricing_rule.floor_price).toFixed(2),
-        increment_price_by: Number(this.props.ticketObj.rule.pricing_rule.lowest_by).toFixed(2)
+        increment_price: Number(this.props.ticketObj.rule.pricing_rule.lowest_by).toFixed(2),
+        ceiling_valid: true,
+        floor_valid: true,
+        increment_valid: true,
       };
   } else {
     this.state = {
       ceiling_price: '',
       floor_price: '',
-      increment_price_by: 0
+      increment_price: 0,
+      ceiling_valid: false,
+      floor_valid: false,
+      increment_valid: false,
     };
   }
 
@@ -35,14 +39,46 @@ class TicketGroup extends Component {
     this.handleSubmit = this.handleSubmit.bind(this, this.props.ticketObj);
   }
 
-  ceilingChange(event) {
-    let cleanValue = event.target.value.trim().replace(/[^.0-9]/g, '');
-    if(!isNaN(Number(cleanValue))){
-      this.setState({ ceiling_price: cleanValue, ceiling_valid: true });
-    } else {
-      this.setState({ ceiling_price: event.target.value, ceiling_valid: false }, ()=>console.log(this.state));
-    }
+  checkValue(input, field){
+    let output = {},
+        cleanValue = input.trim().replace(/[^.0-9]/g, '');
 
+    if(!isNaN(Number(cleanValue))){
+      if(Number(cleanValue) > 0){
+        let valid = false;
+        if(field === 'ceiling' && cleanValue >= this.state.floor_price){
+          valid = true
+        }
+        if(field === 'floor' && cleanValue <= this.state.ceiling_price){
+          valid = true
+        }
+        if(field === 'increment' && cleanValue > 0){
+          valid = true
+
+        }
+
+        output[field + '_price'] = cleanValue
+        output[field + '_valid'] = valid
+        return output;
+      } else {
+        input = input.indexOf('$') === 0 ? 0 : input;
+        output[field + '_price'] = input
+        output[field + '_valid'] = false
+        return output;
+      }
+    }
+  }
+
+  ceilingChange(event) {
+    this.setState(this.checkValue(event.target.value, 'ceiling'), () => console.log(this.state));
+  }
+
+  floorChange(event) {
+    this.setState(this.checkValue(event.target.value, 'floor'));
+  }
+
+  incrementChange(event) {
+    this.setState(this.checkValue(event.target.value, 'increment'));
   }
 
   formatInput(){
@@ -55,23 +91,14 @@ class TicketGroup extends Component {
       this.setState(values,() =>{console.log(this.state)})
   }
 
-  floorChange(event) {
-    let cleanValue = event.target.value.trim().replace(/[^.0-9]/g, '')
-    this.setState({floor_price: cleanValue || ''});
-  }
-
-  incrementChange(event) {
-    let cleanValue = event.target.value.trim().replace(/[^.0-9]/g, '');
-    this.setState({increment_price_by: cleanValue || ''});
-  }
-
   handleSubmit(ticketGroup) {
-    ticketGroup.rule.pricing_rule.ceiling_price = Number(this.state.ceiling_price)
-    ticketGroup.rule.pricing_rule.floor_price = Number(this.state.floor_price)
-    ticketGroup.rule.pricing_rule.lowest_by = Number(this.state.increment_price_by)
-    this.props.handleRuleRefresh(ticketGroup)
+    if(this.state.ceiling_valid && this.state.floor_valid && this.state.increment_valid){
+      ticketGroup.rule.pricing_rule.ceiling_price = Number(this.state.ceiling_price)
+      ticketGroup.rule.pricing_rule.floor_price = Number(this.state.floor_price)
+      ticketGroup.rule.pricing_rule.lowest_by = Number(this.state.increment_price_by)
+      this.props.handleRuleRefresh(ticketGroup)
+    }
   }
-
 
   renderSeats(seats){
     if(seats && seats.split(',').length <= 10){
@@ -141,8 +168,15 @@ class TicketGroup extends Component {
   }
 
   addOrEditIcon(rule, expanded){
-    if(Object.keys(rule).length > 0){
-      if(rule.price_updates[rule.price_updates.length -1].state === 'active'){
+    if(rule.price_updates){
+      let activeIndex = 0
+      rule.price_updates.forEach((u,i)=>{
+        if(u.state === 'active'){
+          activeIndex = i
+        }
+      })
+      let active = rule.price_updates[activeIndex].state
+      if(active === 'active'){
         return(
           <div className='tProps TicketGroup_QuickEdit active floatRight' onClick={this.props.quickEdit}><FontAwesome name='pencil'/></div>
         )
@@ -193,7 +227,6 @@ class TicketGroup extends Component {
     console.log(element.target.value, type)
   }
 
-
   render() {
     Moment.locale('en');
     var dt = new Date(this.props.lastPriceUpdate),
@@ -203,7 +236,11 @@ class TicketGroup extends Component {
         expanded = 0,
         broadcasting = 'tProps darkGrey',
         costPerTicket = 0,
-        listPriceStyle = 'tPricing darkGreen green_bkg'
+        listPriceStyle = 'tPricing darkGreen green_bkg',
+        ceilingStyle = this.state.ceiling_valid ? 'TicketGroup_Rule_High' : 'TicketGroup_Rule_High invalid',
+        floorStyle = this.state.floor_valid ? 'TicketGroup_Rule_Low' : 'TicketGroup_Rule_Low invalid',
+        incrementStyle = this.state.increment_valid ? 'TicketGroup_Rule_Increment' : 'TicketGroup_Rule_Increment invalid'
+
 
     if(this.props.seats){
       costPerTicket = this.props.cost / this.props.seats.split(',').length
@@ -218,9 +255,6 @@ class TicketGroup extends Component {
 
     if(this.props.ticketObj.rule.price_updates){
       let activeIndex = 0
-      updateObject.ceiling = this.props.ticketObj.rule.pricing_rule.ceiling_price || '';
-      updateObject.floor = this.props.ticketObj.rule.pricing_rule.floor_price || '';
-
       this.props.ticketObj.rule.price_updates.forEach((u,i)=>{
         if(u.state === 'active'){
           activeIndex = i
@@ -232,9 +266,11 @@ class TicketGroup extends Component {
     } else {
       active = 'TicketGroup_Rule_Active TicketGroup_CheckBox TicketGroup_NotCreated'
       refresh = 'TicketGroup_Rule_Active TicketGroup_CheckBox TicketGroup_NotCreated'
-      updateObject.ceiling = ' '
-      updateObject.floor = ' '
     }
+
+    active = (this.state.ceiling_valid && this.state.floor_valid && this.state.increment_valid) ? active : active + ' disabled'
+    refresh = (this.state.ceiling_valid && this.state.floor_valid && this.state.increment_valid) ? refresh : refresh + ' disabled'
+
     broadcasting = this.props.broadcast ? 'tProps brightGreen' : 'tProps darkGrey';
     //checkbox functionality for TicketGroup_
     //<div className={ selected } onClick={this.props.handleTicketCheck}><FontAwesome name='check'/></div>
@@ -270,7 +306,7 @@ class TicketGroup extends Component {
               </div>
               <div className="TicketGroup_Rule_InputWrapper">
                 <div className="TicketGroup_Rule_InputLabel">Refresh</div>
-                <div className={ refresh } onClick={this.handleSubmit}>{ this.refreshIcon(this.props.ticketObj, updateObject) }</div>
+                <div className={ refresh } onClick={this.handleSubmit}>{ this.refreshIcon(this.props.ticketObj) }</div>
               </div>
               <div className="TicketGroup_Rule_InputWrapper">
                 <div className="TicketGroup_Rule_InputLabel">Stop Loss %</div>
@@ -278,15 +314,15 @@ class TicketGroup extends Component {
               </div>
               <div className="TicketGroup_Rule_InputWrapper">
                 <div className="TicketGroup_Rule_InputLabel">Step Value</div>
-                <input className='TicketGroup_Rule_Increment' onChange={ this.incrementChange } value={ this.state.increment_price_by }/>
+                <input className={ incrementStyle } onChange={ this.incrementChange } value={ '$' + this.state.increment_price } onBlur={ this.formatInput }/>
               </div>
               <div className="TicketGroup_Rule_InputWrapper">
-                <div className="TicketGroup_Rule_InputLabel">High Price</div>
-                <input className='TicketGroup_Rule_High' onChange={ this.ceilingChange } value={ this.state.ceiling_price } onBlur={ this.formatInput }/>
+                <div className="TicketGroup_Rule_InputLabel">Ceiling</div>
+                <input className={ ceilingStyle } onChange={ this.ceilingChange } value={ '$' + this.state.ceiling_price } onBlur={ this.formatInput }/>
               </div>
               <div className="TicketGroup_Rule_InputWrapper">
-                <div className="TicketGroup_Rule_InputLabel">Low Price</div>
-                <input className='TicketGroup_Rule_Low' onChange={ this.floorChange } value={ this.state.floor_price }/>
+                <div className="TicketGroup_Rule_InputLabel">Floor</div>
+                <input className={ floorStyle } onChange={ this.floorChange } value={ '$' + this.state.floor_price } onBlur={ this.formatInput }/>
               </div>
               </div>
           </AnimateHeight>
