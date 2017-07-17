@@ -10,6 +10,7 @@
 
 .TicketGroup_Rule_StopLoss{
   background-color: #FDD;
+  width: 40px;
   text-align: center;
 }
 
@@ -24,6 +25,9 @@
 }
 
 .TicketGroup_Rule_Increment{
+  color: #777;
+  vertical-align: top;
+  margin-left:3px;
   text-align: center;
 }
 
@@ -58,7 +62,7 @@
 .TicketGroup_QuickEdit{
   display:inline-block;
   width: 21px;
-  height: 20px;
+  height: 21px;
   padding-left:5px;
   padding-top: 3px;
   cursor: pointer;
@@ -67,8 +71,9 @@
 
 .TicketGroup_CheckBox{
   display:inline-block;
-  width: 40px;
+  width: 39px;
   height: 39px;
+  font-size: 1.6em;
   color: #FFF;
   border:1px solid #777;
   background-color: #FFF;
@@ -85,6 +90,11 @@
 
 .TicketGroup_Active{
     border-radius: 20px;
+}
+
+.TicketGroup_Active:hover{
+    color: #9b7373;
+    background-color: #e5acac;
 }
 
 .TicketGroup_Inactive{
@@ -114,5 +124,5 @@
 
 .TicketGroup_RefreshRule:hover{
   color: #0A0;
-  background-color: #c6c6c6;
+  background-color: #b6f9b6;
 }

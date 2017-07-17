@@ -1,7 +1,7 @@
 //data.js
 const dataLocal = [
   {"ticketGroup":
-  {"skyboxId":8835550,"quantity":3,"section":"GA","row":"GA","lowSeat":5,"highSeat":7,"seats":"5,6,7","cost":345.0,"faceValue":0.0,
+  {"skyboxId":8835550,"quantity":3,"section":"1","row":"1","lowSeat":5,"highSeat":7,"seats":"5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20","cost":345.0,"faceValue":0.0,
     "listPrice":170.0,"lastPriceUpdate":"2016-09-21T18:05:26.000+0000","seatType":"GA","broadcast":false,
     "event":{"eventId":2149810,"stubhubEventId":9686939,"name":"2017 Country Jam - 4 Day Pass (6/15 - 6/18) (Kenny Chesney, Jason Aldean, Thomas Rhett, and Justin Moore)","date":"06/15/2017",
     "venue":{"name":"Country Jam USA - CO","city":"Mack","state":"CO","timezone":"America/Denver"},

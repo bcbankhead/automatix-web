@@ -84,6 +84,9 @@
 .tEventTitle{
   width: 60%;
   color: #c5d3ea;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 

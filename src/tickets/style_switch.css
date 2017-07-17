@@ -1,0 +1,43 @@
+
+.switch{
+  border:1px solid #777;
+  width:16px;
+  height:40px;
+  border-radius:4px;
+  cursor:pointer;
+  display:inline-block;
+  position:relative;
+  overflow:hidden;
+  box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5);
+}
+.switch_toggle{
+  position:relative;
+  border:1px solid #777;
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+  width:16px;
+  height:20px;
+  right:1px;
+  border-radius:4px;
+  background:#EFEFEF;
+  transition:all .2s ease-in-out;
+}
+
+
+.switch.up{
+  background-color: #ace5ae;
+}
+
+.switch.down{
+  background-color: #e5acac;
+}
+
+.switch_toggle.down{
+  top:19px;
+}
+
+.switch_toggle.up{
+  top:-1px;
+}
+  .switch.disabled{
+    cursor:not-allowed;
+  }
